@@ -118,23 +118,25 @@ public:
             cout << "No passwords stored for the current user." << endl;
         }
     }
-    bool getPassword(const string& website, const string& username, string& retrievedPassword) {
+
+    bool getPassword(const string& website, string& retrievedUsername, string& retrievedPassword) {
         ifstream file(loggedInUser + ".txt");
         if (file.is_open()) {
             string site, user, encryptedPass;
             while (file >> site >> user >> encryptedPass) {
-                if (decrypt(site) == website && decrypt(user) == username) {
-                    retrievedPassword = decrypt(encryptedPass); // Decrypt and return the password
-                    cout << "Password retrieval successful." << endl;
+                if (decrypt(site) == website) {
+                    // Display the username and password (in plain text) to the user
+                    retrievedUsername = decrypt(user);
+                    retrievedPassword = decrypt(encryptedPass);
+                    cout << "Retrieved Username: " << retrievedUsername << ", Retrieved Password: " << retrievedPassword << endl;
                     file.close();
                     return true;
                 }
             }
             file.close();
         }
-        return false; // Password not found for the given website and username
+        return false; // Password not found for the given website
     }
-
 
 
     bool isLoggedInUser() const {
